@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vehicle Registration and Renewal</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+		
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+    <div class="container">
+        <h1>Vehicle Registration</h1>
+        <h2 id="VehicleReg"></h2>
+        <label for="name" class="col-lg-2 control-label">Driver ID</label>
+        <input id="driverid" type="text">
+        <label for="name" class="col-lg-2 control-label">Vehicle Identification Number</label>
+        <input id="vehicleNo" type="text">
+        <label for="name" class="col-lg-2 control-label">Address</label>
+        <input id="Address" type="text">
+        <label for="name" class="col-lg-2 control-label">Expiration Date</label>
+        <input id="expirationdate" type="text">
+        <label for="name" class="col-lg-2 control-label">Renewal Until</label>
+        <input id="renewaldate" type="text">
+        <button id="button">Update</button>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+       // Our future code here..
+               if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+        web3.eth.defaultAccount = '0x37B93b5952488C63c97f8864c1C888E02cFe910D';
+        var VehicleReg = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_driverId",
+				"type": "string"
+			},
+			{
+				"name": "_vehicleNo",
+				"type": "string"
+			},
+			{
+				"name": "_Address",
+				"type": "string"
+			},
+			{
+				"name": "_expirationDate",
+				"type": "string"
+			},
+			{
+				"name": "_renewalDate",
+				"type": "string"
+			}
+		],
+		"name": "setVehicle",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getVehicle",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+],'0x3fF4e0bd221664389d132b07dd4e18E28D10a723');
+    
+    console.log(VehicleReg);
+
+        $("#button").click(function() {
+
+
+            VehicleReg.methods.setVehicle($("#driverid").val(), $("#vehicleNo").val(), $("#Address").val(), $("#expirationdate").val(), $("#renewaldate").val()).send({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'}, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("Working");
+                })
+                .then((result) => {
+                console.log('Send has completed');
+        
+                VehicleReg.methods.getVehicle().call({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'},function(error, result){
+            
+                if(!error)
+                    {
+                        alert('Driver ID: '+result[0]+'  The vehicle number is  '+result[1]+'  Address: '+result[2]+'  Old date: '+result[3]+'  New active date: '+result[4]);
+                        console.log(result);
+                        // document.location.reload();
+
+                    }
+                else
+                    console.log(error);
+                    });
+         
+            });
+          
+        });
+      
+			
+    </script>
+</body>
+</html>

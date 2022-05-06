@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vital Record</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+		
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+    <div class="container">
+        <h1>Vital Record: Birth Certificate</h1>
+        <h2 id="VitalRecord"></h2>
+        <label for="name" class="col-lg-2 control-label">Name of Person</label>
+        <input id="name" type="text">
+        <label for="name" class="col-lg-2 control-label">Date of Birth</label>
+        <input id="date" type="text">
+        <label for="name" class="col-lg-2 control-label">Place of Birth</label>
+        <input id="place" type="text">
+		<label for="name" class="col-lg-2 control-label">Hospital of Birth</label>
+        <input id="hospital" type="text">
+		<label for="name" class="col-lg-2 control-label">Mother's Name</label>
+        <input id="mother" type="text">
+		<label for="name" class="col-lg-2 control-label">Father's Name</label>
+        <input id="father" type="text">
+        <button id="button">Get Record</button>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+       
+               if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+			console.log("yey");
+        }
+        web3.eth.defaultAccount = '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81';
+		console.log( web3.eth.defaultAccount);
+        var VitalRecords = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_date",
+				"type": "string"
+			},
+			{
+				"name": "_place",
+				"type": "string"
+			},
+			{
+				"name": "_hospital",
+				"type": "string"
+			},
+			{
+				"name": "_mother",
+				"type": "string"
+			},
+			{
+				"name": "_father",
+				"type": "string"
+			}
+		],
+		"name": "setRecord",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getRecord",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+],'0x3133CcEDDE9759c9Dbc48FC10e93898fc28bDebD');
+    // var VitalRecords = VitalRecordContract.at('0x0e296b090fc48e9b8734fc13438aa470b38fbe0a');
+    // console.log(VitalRecords);
+
+
+        // $("#button").click(function() {
+        //     VitalRecords.methods.setRecord($("#name").val(), $("#date").val(), $("#place").val(), $("#hospital").val(), $("#mother").val(), $("#father").val());
+		// 	alert("Your Birth Certificate Related information is taken!")
+             
+        // })
+		// VitalRecords.methods.getRecord(function(error, result){
+        //     if(!error)
+        //         {
+        //             $("#VitalRecord").html(result[0]+result[1]+result[2]+result[3]+result[4]+result[5]);
+        //             console.log(result);
+        //         }
+        //     else
+        //         console.log(error);
+        // });
+
+		$("#button").click(function() {
+
+
+			VitalRecords.methods.setRecord($("#name").val(), $("#date").val(), $("#place").val(), $("#hospital").val(), $("#mother").val(), $("#father").val()).send({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'}, (err) => {
+					if (err) {
+						console.log(err);
+					}
+					console.log("Working");
+					})
+					.then((result) => {
+					console.log(result[0]);
+
+					VitalRecords.methods.getRecord().call({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'},function(error, result){
+
+					if(!error)
+						{
+							alert(' Name: '+result[0]+'. '+' Date of Birth: '+result[1]+'. '+' Place of Birth: ' +result[2]+' Hospital: ', result[3] + "Mother's Name: ", result[4] + "Father's Name: ", result[5]);
+							console.log("Data Fetched from blockchain: "+ result[0]+result[1]+result[2]+result[3]);
+
+						}
+					else
+						console.log(error);
+						});
+
+					});
+
+				});
+    </script>
+</body>
+</html>

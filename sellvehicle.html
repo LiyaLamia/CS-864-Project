@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vehicle Service</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+
+
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+		
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+    <div class="container">
+    	
+        <h1>Selling or Donating a Vehicle</h1>
+        <h2 id="vehicle"></h2>
+		<label for="name" class="col-lg-2 control-label">Vehicle Identification Number</label>
+        <input id="vehicleId" type="text">
+        <label for="name" class="col-lg-2 control-label">Vehicle Odometer</label>
+		<input id="vehicleOdometer" type="text">
+		<label for="name" class="col-lg-2 control-label">Date of Vehicle Selling/Trading</label>
+		<input id="date" type="text">
+		<label for="name" class="col-lg-2 control-label">Vehicle Price</label>
+        <input id="vehiclePrice" type="text">
+		<label for="name" class="col-lg-2 control-label">Title Number</label>
+		<input id="vehicleTitle" type="text">
+
+		
+        <button id="button">Update Vehicle Record</button>
+
+    </div>
+     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       if (typeof web3 !== 'undefined') {
+           web3 = new Web3(web3.currentProvider);
+       } else {
+           web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+       }
+       web3.eth.defaultAccount = '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81';
+       var Vehicle = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_vehicleId",
+				"type": "string"
+			},
+			{
+				"name": "_vehicleOdometer",
+				"type": "string"
+			},
+			{
+				"name": "_vehicleDate",
+				"type": "string"
+			},
+			{
+				"name": "_vehiclePrice",
+				"type": "string"
+			},
+			{
+				"name": "_vehicleTitle",
+				"type": "string"
+			}
+		],
+		"name": "setVehicle",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getVehicle",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+], '0xfd63d176F8BB0B421D3FC1deBeA3e568C6d92efe');
+       
+
+
+		 $("#button").click(function() {
+
+
+			Vehicle.methods.setVehicle($("#vehicleId").val(), $("#vehicleOdometer").val(), $("#date").val(),$("#vehiclePrice").val(),$("#vehicleTitle").val()).send({from: '0xC552170cD101888b28553AFCD7899E631D26Fa47'}, (err) => {
+			if (err) {
+				console.log(err);
+			}
+			console.log("Working");
+			})
+			.then((result) => {
+			console.log(result[0]);
+
+			Vehicle.methods.getVehicle().call({from: '0xC552170cD101888b28553AFCD7899E631D26Fa47'},function(error, result){
+
+			if(!error)
+				{
+					alert('The Vehicle ID is: '+result[0]+'. '+' vehicleOdometer is: '+result[1]+'. '+' The date is: ' +result[2]+'Price: '+ result[3]+ 'The title of Vehicle: '+ result[4]);
+					console.log(result);
+
+				}
+			else
+				console.log(error);
+				});
+
+			});
+			console.log(result[0]);
+
+		});
+    </script>
+
+</body>
+</html>

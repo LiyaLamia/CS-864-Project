@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Real ID</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+		
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+    <div class="container">
+        <div class="input-group">
+            <h3 class="card-title">Search Driver's Record</h3>
+            <div class="form-outline">
+              <input type="search" id="form1" class="form-control" />
+            </div>
+            <button type="button" class="btn btn-primary">Search</button>
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+	
+       if (typeof web3 !== 'undefined') {
+           web3 =  web3.currentProvider.enable();
+       } else {
+           web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+		   
+       }
+
+	   
+	   
+	   
+	    console.log("Accounts: "+ web3.eth.getAccounts());
+      
+       web3.eth.defaultAccount = '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81';
+    //    console.log(web3.eth.defaultAccount);
+       var Real = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_driverId",
+				"type": "string"
+			},
+			{
+				"name": "_address1",
+				"type": "string"
+			},
+			{
+				"name": "_address2",
+				"type": "string"
+			}
+		],
+		"name": "setId",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getID",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+], '0x934467852aF2c1c9982603762C33BCc8ECcB0071');
+       
+
+	
+		$("#button").click(function() {
+
+            var input = document.getElementById("searchTxt");
+
+// 			Real.methods.setId($("#driverId").val(), $("#address1").val(), $("#address2").val()).send({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'}, (err) => {
+// 			if (err) {
+// 				console.log(err);
+// 			}
+// 			console.log("Working");
+// 			})
+// 			.then((result) => {
+// 			console.log(result[0]);
+
+// 			Real.methods.getID().call({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'},function(error, result){
+
+// 			if(!error)
+// 				{
+// 					alert('The driver ID is: '+result[0]+'. '+' The Entered Address 1 is: '+result[1]+'. '+' The Entered Address 2 is: ' +result[2]+' The Driver ID is Real ID compliant');
+//                     console.log("Data Fetched from blockchain: "+ result[0]+' '+result[1]+' '+result[2]);
+
+// 				}
+// 			else
+// 				console.log(error);
+// 				});
+
+// });
+
+});
+		
+    </script>
+
+  
+
+</body>
+</html>

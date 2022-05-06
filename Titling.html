@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vehicle Service</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+
+
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+		
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+    <div class="container">
+    	
+        <h1>Titling a Vehicle</h1>
+        <h2 id="vehicle"></h2>
+		<label for="name" class="col-lg-2 control-label">Vehicle ID</label>
+        <input id="vehicleId" type="text">
+        <label for="name" class="col-lg-2 control-label">Proof of Address</label>
+		<input id="proofAddress" type="text">
+		<label for="name" class="col-lg-2 control-label">Proof of Purchase</label>
+        <input id="proofVehicle" type="text">
+		<label for="name" class="col-lg-2 control-label">Vehicle Price</label>
+		<input id="price" type="text">
+		<label for="name" class="col-lg-2 control-label">Vehicle Title</label>
+		<input id="vehicleTitle" type="text">
+		
+        <button id="button">Update Vehicle Title</button>
+
+    </div>
+     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       if (typeof web3 !== 'undefined') {
+           web3 = new Web3(web3.currentProvider);
+       } else {
+           web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+       }
+       web3.eth.defaultAccount = '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81';
+       
+       var Vehicle = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_vehicleId",
+				"type": "string"
+			},
+			{
+				"name": "_proofAddress",
+				"type": "string"
+			},
+			{
+				"name": "_proofVehicle",
+				"type": "string"
+			},
+			{
+				"name": "_vehiclePrice",
+				"type": "string"
+			},
+			{
+				"name": "_vehicleTitle",
+				"type": "string"
+			}
+		],
+		"name": "setVehicleTitle",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getVehicleTitle",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+], '0x12FAFEBaC220e71612E2D8bb7208f21Cb19602f8');
+       
+	  
+        
+
+		 $("#button").click(function() {
+
+
+			Vehicle.methods.setVehicleTitle($("#vehicleId").val(), $("#proofAddress").val(), $("#proofVehicle").val() , $("#price").val(),$("#vehicleTitle").val()).send({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'}, (err) => {
+			if (err) {
+				console.log(err);
+			}
+			console.log("Working");
+			})
+		.then((result) => {
+		console.log(result);
+
+		Vehicle.methods.getVehicleTitle().call({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'},function(error, result){
+
+		 if(!error)
+            {
+                   alert("Vehicle ID: "+ result[0]+', '+"Proof of Address: "+ result[1]+', '+ "Proof of Purchase:"+ result[2]+', '+ "Vehicle Price: "+ result[3]+', '+ "Vehicle Title: "+ result[4]);
+                    console.log(result);
+                 }
+           else
+                 console.log(error);
+			});
+
+		});
+
+		});
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vital Record</title>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+		
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+    <div class="container">
+        <h1>Vital Record: Death Certificate</h1>
+        <h2 id="VitalRecord"></h2>
+        <label for="name" class="col-lg-2 control-label">Name of Deceased</label>
+        <input id="name" type="text">
+        <label for="name" class="col-lg-2 control-label">Date of Death</label>
+        <input id="date" type="text">
+        <label for="name" class="col-lg-2 control-label">Place of Death</label>
+        <input id="place" type="text">
+        <label for="name" class="col-lg-2 control-label">Phone Number</label>
+        <input id="phone" type="text">
+        <button id="button">Get Record</button>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+       
+               if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+        web3.eth.defaultAccount = '0x37B93b5952488C63c97f8864c1C888E02cFe910D';
+        var VitalRecords = new web3.eth.Contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getRecord",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"name": "_date",
+				"type": "string"
+			},
+			{
+				"name": "_place",
+				"type": "string"
+			},
+			{
+				"name": "_phone",
+				"type": "string"
+			}
+		],
+		"name": "setRecord",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+], '0x12FAFEBaC220e71612E2D8bb7208f21Cb19602f8');
+  
+
+    // VitalRecords.getRecord(function(error, result){
+    //         if(!error)
+    //             {
+    //                 $("#VitalRecord").html(result[0]+result[1]+result[2]+result[3]);
+    //                 console.log(result);
+    //             }
+    //         else
+    //             console.log(error);
+    //     });
+    //     $("#button").click(function() {
+    //         VitalRecords.setRecord($("#name").val(), $("#date").val(), $("#place").val(), $("#phone").val());
+             
+    //     });
+
+
+		$("#button").click(function() {
+
+
+			VitalRecords.methods.setRecord($("#name").val(), $("#date").val(), $("#place").val(), $("#phone").val()).send({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'}, (err) => {
+				if (err) {
+					console.log(err);
+				}
+			console.log("Working");
+			})
+			.then((result) => {
+			console.log(result[0]);
+
+			VitalRecords.methods.getRecord().call({from: '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81'},function(error, result){
+
+				if(!error)
+                {
+                   alert("Name of Deceased:"+' '+ result[0]+"Date of Death:"+result[1]+' '+"Place of Death:"+result[2]+' '+"Phone:"+result[3]);
+                    console.log(result);
+                }
+            else
+                console.log(error);
+				});
+
+			});
+
+		});
+    </script>
+</body>
+</html>

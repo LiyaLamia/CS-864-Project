@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Report a vehicle sold  or traded</title>
+    <link rel="stylesheet" type="text/css" href="report.css">
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Report a Vehicle Sold or Traded</h1>
+        <h2 id="reportv"></h2>
+        <label for="name" class="col-lg-2 control-label">Vehicle ID</label>
+        <input id="vehicleid" type="text">
+        <label for="name" class="col-lg-2 control-label">Price</label>
+        <input id="price" type="text">
+        <label for="name" class="col-lg-2 control-label">Odometer Reading</label>
+        <input id="reading" type="text">
+        <label for="name" class="col-lg-2 control-label">Transfer to : </label>
+        <input id="transferredto" type="text">
+        <button id="button">Sold</button>
+        <button id="button1">Traded</button>
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script>
+       // Our future code here..
+               if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+        web3.eth.defaultAccount = '0xF8c581AA74Dd77357bced57e96BB2F3B84dd5D81';
+        var ReportVehicle = new web3.eth.Contract([
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_vehicleid",
+                "type": "string"
+            },
+            {
+                "name": "_price",
+                "type": "string"
+            },
+            {
+                "name": "_reading",
+                "type": "string"
+            },
+            {
+                "name": "_transferredto",
+                "type": "string"
+            }
+        ],
+        "name": "setReport",
+        "outputs": [],
+        "payable": false,
+        "type": "function",
+        "stateMutability": "nonpayable"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getReport",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "type": "function",
+        "stateMutability": "view"
+    }
+],'0x93A6bfE6FB8855e6bbA42bAd01AeeEc446f0204e');
+    // var ReportVehicle = ReportVehicleContract.at('0xcf5075c28a6b16d911984d2036f2a164c7e4ec25');
+    // console.log(ReportVehicle);
+
+    // ReportVehicle.getReport(function(error, result){
+    //         if(!error)
+    //             {
+    //                 $("#reportv").html(result[0]+result[1]+result[2]+result[3]);
+    //                 console.log(result);
+    //             }
+    //         else
+    //             console.log(error);
+    //     });
+    //     $("#button").click(function() {
+    //         alert("Vehicle sold");
+    //         ReportVehicle.setReport($("#vehicleid").val(), $("#price").val(), $("#reading").val(), $("#transferredto").val());
+    //     });
+    //             $("#button1").click(function() {
+    //         alert("Vehicle Traded");
+    //         ReportVehicle.setReport($("#vehicleid").val(), $("#price").val(), $("#reading").val(), $("#transferredto").val());
+    //     });
+
+        $("#button").click(function() {
+
+
+            ReportVehicle.methods.setReport($("#vehicleid").val(), $("#price").val(), $("#reading").val(), $("#transferredto").val()).send({from: '0xC552170cD101888b28553AFCD7899E631D26Fa47'}, (err) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log("Working");
+        })
+        .then((result) => {
+        console.log(result);
+
+        ReportVehicle.methods.getReport().call({from: '0xC552170cD101888b28553AFCD7899E631D26Fa47'},function(error, result){
+
+            if(!error)
+                {
+                    $("#reportv").html(result[0]+result[1]+result[2]+result[3]);
+                    console.log(result);
+                }
+            else
+                console.log(error);
+        });
+
+        });
+
+        });
+    </script>
+</body>
+</html>

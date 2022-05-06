@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<style>
+	.row img{
+	  height:90px;
+	  align-content: center;
+	
+		padding-left: 60px;
+	
+	}
+	.row h3{
+	  align-content: center;
+	}
+	</style>
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top">
+		<div class="container">
+		  <div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>                        
+			</button>
+		   <a href="home.html">DMV<img src="./dmvLogo.png" style="height:70px;"></a>
+		  </div>
+		  <div class="collapse navbar-collapse" id="myNavbar">
+			<ul class="nav navbar-nav navbar-right" id="tabs">
+			
+			</ul>
+		  </div>
+		</div>
+	  </nav>
+	  
+    <div class="container">
+
+        <h1>Driver's Service</h1>
+
+        <h2 id="driver"></h2>
+		<label for="name" class="col-lg-2 control-label">Driver ID</label>
+        <input id="driverId" type="text">
+        <label for="name" class="col-lg-2 control-label">Driver Name</label>
+		<input id="driverName" type="text">
+		<label for="name" class="col-lg-2 control-label">Driver Age</label>
+        <input id="age" type="text">
+		<label for="name" class="col-lg-2 control-label">Driver DOB</label>
+		<input id="dob" type="text">
+		<label for="name" class="col-lg-2 control-label">Driver City</label>
+		<input id="city" type="text">
+		<label for="name" class="col-lg-2 control-label">Driver Zipcode</label>
+        <input id="zip" type="text">
+
+        
+
+        <button id="button">Update Driver Service</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       if (typeof web3 !== 'undefined') {
+           web3 = new Web3(web3.currentProvider);
+       } else {
+		   console.log("yey");
+           web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+       }
+
+       web3.eth.defaultAccount = web3.eth.accounts['0'];
+
+       var Driver = new web3.eth.Contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_driverId",
+				"type": "string"
+			},
+			{
+				"name": "_driverName",
+				"type": "string"
+			},
+			{
+				"name": "_age",
+				"type": "string"
+			},
+			{
+				"name": "_dob",
+				"type": "string"
+			},
+			{
+				"name": "_city",
+				"type": "string"
+			},
+			{
+				"name": "_zip",
+				"type": "string"
+			}
+		],
+		"name": "setDriver",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getDriver",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+],'0xf6a8CA5F4AC6b5893DcA325C07F9469FC255097E');
+    //    var Driver = DriverService.at('0xf6a8CA5F4AC6b5893DcA325C07F9469FC255097E');
+    //    console.log(DriverService);
+	console.log(Driver);
+
+	  
+
+        $("#button").click(function() {
+            Driver.methods.setDriver($("#driverId").val(), $("#driverName").val(),$("#age").val(),$("#dob").val(),$("#city").val(),$("#zip").val());
+            //Driver.setDriver($("#name").val(), $("#age").val());
+			alert('Driver Registered');
+        });
+         Driver.methods.getDriver(function(error, result){
+            if(!error)
+                {
+                    $("#driver").html(result[0],result[1],result[2],result[3],result[4],result[5]);
+                    console.log(result);
+                }
+            else
+                console.log(error);
+        });
+
+    </script>
+
+    </script>
+
+</body>
+</html>
